@@ -1,7 +1,7 @@
 {
   "name": "grupp-3---node",
   "version": "1.0.0",
-  "description": "",
+  "description": "Börja med att köra npm init -y, nedb-promises, joi, nodemon, express, uuid",
   "main": "index.js",
   "type": "module",
   "scripts": {

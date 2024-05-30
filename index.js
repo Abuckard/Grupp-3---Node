@@ -7,6 +7,7 @@ import orderRouter from "./routes/order.js";
 import cartRouter from "./routes/cart.js"; // Importera cartRouter för att hantera varukorgsoperationer
 import authRouter from "./routes/auth.js"
 import checkoutRouter from "./routes/checkout.js"
+import aboutRouter from "./routes/about.js"
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,6 +23,7 @@ app.use('/order', orderRouter)
 app.use('/cart', cartRouter) // Använd cartRouter för att hantera varukorgsoperationer
 app.use('/auth', authRouter) 
 app.use('/checkout', checkoutRouter)
+app.use('/about', aboutRouter)
 
 global.currentUser = null
 
