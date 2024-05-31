@@ -1,25 +1,35 @@
 import { Router } from 'express';
 import nedb from 'nedb-promises';
-import { cartDB } from './cart.js';
-
+import { cartDB } from './cart.js'; // Se till att denna sökväg är korrekt
 
 const orderHistoryDB = new nedb({ filename: 'orderhistory.db', autoload: true });
 
 const router = Router();
 
-// Route to move items from cart to order history
 router.post('/checkout', async (req, res) => {
     try {
-        // Hämta innehållet från cart.db
+        const { userId } = req.body;
+        if (!userId) {
+            return res.status(400).json({ success: false, message: "User ID is required" });
+        }
+
         const cartItems = await cartDB.find({});
+        console.log("Cart items fetched for checkout:", cartItems);
 
-        // Spara innehållet i orderhistorik.db
-        await orderHistoryDB.insert(cartItems);
+        if (cartItems.length === 0) {
+            return res.status(400).json({ success: false, message: "Cart is empty" });
+        }
 
-        // Töm cart.db
+        const order = {
+            userId,
+            items: cartItems,
+            date: new Date()
+        };
+
+        await orderHistoryDB.insert(order);
+
         await cartDB.remove({}, { multi: true });
 
-        // Skicka ett svar till klienten
         res.json({ success: true, message: "Order placed successfully" });
     } catch (error) {
         console.error("Error processing checkout:", error);
@@ -28,11 +38,3 @@ router.post('/checkout', async (req, res) => {
 });
 
 export default router;
-
-
-
-
-
-
-
-

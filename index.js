@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from 'body-parser';
 import path from "path";
 import { fileURLToPath } from "url";
 import nedb from "nedb-promises"
@@ -7,13 +8,15 @@ import orderRouter from "./routes/order.js";
 import cartRouter from "./routes/cart.js"; // Importera cartRouter för att hantera varukorgsoperationer
 import authRouter from "./routes/auth.js"
 import checkoutRouter from "./routes/checkout.js"
+import registerRouter from "./routes/register.js"
+import orderHistoryRouter from "./routes/orderHistory.js"
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 app.use(express.json())
 
@@ -22,6 +25,8 @@ app.use('/order', orderRouter)
 app.use('/cart', cartRouter) // Använd cartRouter för att hantera varukorgsoperationer
 app.use('/auth', authRouter) 
 app.use('/checkout', checkoutRouter)
+app.use('/register', registerRouter)
+app.use('orderHistory', orderHistoryRouter)
 
 global.currentUser = null
 
