@@ -1,8 +1,6 @@
 import express from 'express';
-import nedb from 'nedb-promises';
 import { v4 as uuidv4 } from 'uuid';
-
-const usersDB = new nedb({ filename: 'users.db', autoload: true });
+import { usersDB } from './db.js';
 
 const router = express.Router();
 
@@ -13,8 +11,7 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ success: false, message: "Username is required" });
         }
 
-        const userId = uuidv4(); // Generera ett unikt användar-ID
-
+        const userId = uuidv4(); // Generate a unique user ID
         const newUser = { userId, username };
         await usersDB.insert(newUser);
 

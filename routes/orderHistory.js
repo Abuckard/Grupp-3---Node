@@ -1,20 +1,24 @@
 import express from 'express';
-import nedb from 'nedb-promises';
-
-const orderHistoryDB = new nedb({ filename: 'orderhistory.db', autoload: true });
+import { orderHistoryDB } from './db.js';
 
 const router = express.Router();
 
-router.get('/orderhistory/:userId', async (req, res) => {
+// Middleware to authenticate and extract user ID from request
+router.use((req, res, next) => {
+    // Assume the user ID is sent in the request header for this example
+    const userId = req.headers['user-id'];
+    if (!userId) {
+        return res.status(400).json({ success: false, message: "User ID is required" });
+    }
+    req.userId = userId;
+    next();
+});
+
+// Route to fetch order history
+router.get('/', async (req, res) => {
     try {
-        const { userId } = req.params;
-
-        const orders = await orderHistoryDB.find({ userId });
-        if (orders.length === 0) {
-            return res.status(404).json({ success: false, message: "No orders found for this user" });
-        }
-
-        res.json({ success: true, orders });
+        const orderHistory = await orderHistoryDB.find({ userId: req.userId });
+        res.status(200).json({ success: true, data: orderHistory });
     } catch (error) {
         console.error("Error fetching order history:", error);
         res.status(500).json({ success: false, message: "Internal Server Error" });

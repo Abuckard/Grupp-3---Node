@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import nedb from 'nedb-promises';
 import { cartDB } from './cart.js'; // Se till att denna sökväg är korrekt
-
-const orderHistoryDB = new nedb({ filename: 'orderhistory.db', autoload: true });
+import { orderHistoryDB } from './db.js';
 
 const router = Router();
 
-router.post('/checkout', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { userId } = req.body;
         if (!userId) {
